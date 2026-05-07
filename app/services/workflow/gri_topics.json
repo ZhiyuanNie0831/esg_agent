@@ -1,0 +1,56 @@
+[
+  {
+    "topicId": "gri_climate_emissions",
+    "label": "GRI 气候与排放",
+    "pillar": "environment",
+    "aliases": ["climate", "气候", "emission", "排放", "scope 1", "scope 2", "scope 3"],
+    "requiredDocumentKinds": ["report"],
+    "kpiPatterns": ["scope 1", "scope 2", "scope 3", "tco2e", "排放"],
+    "weakEvidenceThreshold": 2
+  },
+  {
+    "topicId": "gri_energy_transition",
+    "label": "GRI 能源与转型",
+    "pillar": "environment",
+    "aliases": ["energy", "能耗", "renewable", "可再生", "electricity", "电力"],
+    "requiredDocumentKinds": ["report"],
+    "kpiPatterns": ["可再生电力", "energy", "%"],
+    "weakEvidenceThreshold": 2
+  },
+  {
+    "topicId": "gri_workforce_development",
+    "label": "GRI 员工发展与培训",
+    "pillar": "social",
+    "aliases": ["employee", "员工", "training", "培训", "capability", "人才"],
+    "requiredDocumentKinds": ["report"],
+    "kpiPatterns": ["培训覆盖率", "training coverage", "%"],
+    "weakEvidenceThreshold": 2
+  },
+  {
+    "topicId": "gri_supply_chain_rights",
+    "label": "GRI 供应链与人权",
+    "pillar": "social",
+    "aliases": ["supplier", "供应商", "human rights", "人权", "audit", "审核", "code of conduct"],
+    "requiredDocumentKinds": ["contract", "report"],
+    "kpiPatterns": ["supplier audit", "供应商审核", "人权"],
+    "weakEvidenceThreshold": 2
+  },
+  {
+    "topicId": "gri_board_governance",
+    "label": "GRI 董事会与治理架构",
+    "pillar": "governance",
+    "aliases": ["board", "董事会", "committee", "委员会", "governance", "治理"],
+    "requiredDocumentKinds": ["report"],
+    "kpiPatterns": ["committee met", "委员会会议", "board ESG committee"],
+    "weakEvidenceThreshold": 2
+  },
+  {
+    "topicId": "gri_ethics_compliance",
+    "label": "GRI 商业道德与合规",
+    "pillar": "governance",
+    "aliases": ["anti-bribery", "反舞弊", "anti-corruption", "反腐败", "compliance", "合规", "ethics"],
+    "requiredDocumentKinds": ["report"],
+    "kpiPatterns": ["anti-bribery training", "反舞弊培训", "%"],
+    "weakEvidenceThreshold": 2
+  }
+]

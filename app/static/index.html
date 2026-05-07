@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <!--
+      工作流前端页面入口。
+      负责承载任务输入、材料上传、技能选择、计划展示、执行日志和最终结果区域。
+    -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workflow Agent</title>
+    <link rel="stylesheet" href="/static/styles.css?v=20260507-confirm-button" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <form id="workflow-form" class="app-form">
+        <header class="topbar">
+          <section class="brand-card">
+            <p class="eyebrow">Workflow</p>
+            <h1>ESG Workflow Agent</h1>
+            <p class="subtitle">上传材料，规划后执行。</p>
+          </section>
+
+          <section class="health-card">
+            <div class="card-heading">
+              <span>服务状态</span>
+              <span id="health-badge" class="status-badge pending">检查中</span>
+            </div>
+            <dl class="health-grid">
+              <div>
+                <dt>模型</dt>
+                <dd id="health-model">-</dd>
+              </div>
+              <div>
+                <dt>模型 API</dt>
+                <dd id="health-model-api">-</dd>
+              </div>
+              <div>
+                <dt>技能数</dt>
+                <dd id="skill-count">-</dd>
+              </div>
+              <div>
+                <dt>编排模式</dt>
+                <dd id="health-agent">-</dd>
+              </div>
+              <div>
+                <dt>确认机制</dt>
+                <dd id="confirmation-mode">-</dd>
+              </div>
+            </dl>
+          </section>
+
+        </header>
+
+        <section class="setup-shell">
+          <div class="setup-grid">
+            <section class="panel setup-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">Controls</p>
+                  <h2>运行选项</h2>
+                </div>
+                <span class="summary-pill">规划前生效</span>
+              </div>
+
+              <div class="setup-options-grid">
+                <label class="toggle-card">
+                  <div class="toggle-card-copy">
+                    <span class="field-label">确认机制</span>
+                    <strong>执行前额外复核</strong>
+                    <span class="helper-text">默认只在修订、写入模板等高影响步骤前暂停；打开后每次执行前都会先停一下。</span>
+                  </div>
+                  <input id="manualConfirm" name="manualConfirm" type="checkbox" />
+                </label>
+
+                <label class="toggle-card">
+                  <div class="toggle-card-copy">
+                    <span class="field-label">兜底策略</span>
+                    <strong>允许本地回退</strong>
+                    <span class="helper-text">agent 不可用或失败时，允许切回本地规则和技能。</span>
+                  </div>
+                  <input id="localFallbackEnabled" name="localFallbackEnabled" type="checkbox" checked />
+                </label>
+              </div>
+            </section>
+
+            <section class="panel setup-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">Skill Set</p>
+                  <h2>技能选项</h2>
+                </div>
+                <span id="selected-skill-count" class="summary-pill">0 个技能</span>
+              </div>
+
+              <div class="skillset-editor">
+                <div class="skillset-section">
+                  <span class="field-label">当前 Skill Set</span>
+                  <div id="selected-skills-output" class="skill-pill-list">
+                    <p class="muted">当前没有手动指定 skill，将按意图自动推荐。</p>
+                  </div>
+                </div>
+
+                <div class="skillset-section">
+                  <span class="field-label">手动追加 Skill</span>
+                  <div class="skillset-add-row">
+                    <input
+                      id="custom-skill-name"
+                      name="customSkillName"
+                      type="text"
+                      placeholder="例如：document_classifier"
+                    />
+                    <button id="add-custom-skill-button" type="button" class="secondary-button">加入 Skill Set</button>
+                  </div>
+                </div>
+
+                <div class="skillset-section">
+                  <span class="field-label">已注册技能</span>
+                  <div id="skill-picker-output" class="skill-picker-grid">
+                    <p class="muted">正在加载技能目录。</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <main class="workspace-grid">
+          <section class="chat-column">
+            <div class="panel chat-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">Conversation</p>
+                  <h2>输入</h2>
+                </div>
+                <div class="inline-pills">
+                  <span id="document-count" class="summary-pill">0 份材料</span>
+                  <span id="upload-status" class="summary-pill">未上传文件</span>
+                </div>
+              </div>
+
+              <div id="error-box" class="message-box error hidden"></div>
+
+              <div id="chat-output" class="chat-thread">
+                <p class="muted">对话初始化中。</p>
+              </div>
+
+              <div class="composer-panel">
+                <div class="composer-top-actions">
+                  <button id="clear-conversation-button" type="button" class="ghost-button">清空对话</button>
+                </div>
+
+                <label class="field">
+                    <span class="field-label">任务输入</span>
+                  <textarea
+                    id="chat-input"
+                    name="chatInput"
+                    rows="5"
+                    placeholder="例如：请检查这套 ESG 材料缺什么，并总结重点。"
+                  ></textarea>
+                </label>
+
+                <div class="composer-toolbar">
+                  <input id="upload-files" name="uploadFiles" type="file" multiple />
+                  <button id="upload-button" type="button" class="secondary-button">上传文件</button>
+                </div>
+
+                <div class="composer-actions">
+                  <button id="chat-send-button" type="button" class="primary-button">规划</button>
+                  <button id="execute-button" type="button" class="secondary-button">执行</button>
+                </div>
+
+                <p class="helper-text field-note">
+                  支持上传 ESG 报告、Excel、PDF、DOCX、CSV、HTML 和 EML。
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <aside class="side-column">
+            <section class="panel side-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">Materials</p>
+                  <h3>材料</h3>
+                </div>
+                <span id="result-status" class="result-status idle">空闲</span>
+              </div>
+              <div id="documents-output" class="card-list">
+                <p class="muted">还没有文档。</p>
+              </div>
+            </section>
+
+            <section class="panel side-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">Snapshot</p>
+                  <h3>分析</h3>
+                </div>
+              </div>
+              <div class="side-stack">
+                <article class="side-block">
+                  <h4>意图分析</h4>
+                  <pre id="intention-output" class="code-block small-code muted">等待规划结果。</pre>
+                </article>
+                <article class="side-block">
+                  <h4>缺失材料</h4>
+                  <div id="missing-output" class="table-empty muted">等待规划结果。</div>
+                </article>
+              </div>
+            </section>
+          </aside>
+        </main>
+
+        <section class="results-shell">
+          <div class="results-grid">
+            <section class="panel results-panel wide">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">Plan</p>
+                  <h3>计划</h3>
+                </div>
+                <button id="plan-button" type="submit" class="ghost-button">重新规划</button>
+              </div>
+              <div id="plan-output" class="card-list">
+                <p class="muted">等待规划结果。</p>
+              </div>
+            </section>
+
+            <section class="panel results-panel wide">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">Confirmation</p>
+                  <h3>人工确认</h3>
+                </div>
+              </div>
+              <div id="confirmation-output" class="table-empty muted">普通总结和审核会直接执行；当流程进入待确认状态后，这里会展示需要复核的计划、风险步骤或表格映射。</div>
+            </section>
+
+            <section class="panel results-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">Logs</p>
+                  <h3>日志</h3>
+                </div>
+              </div>
+              <div id="logs-output" class="card-list">
+                <p class="muted">执行后会在这里显示日志。</p>
+              </div>
+            </section>
+
+            <section class="panel results-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">Skills</p>
+                  <h3>技能</h3>
+                </div>
+                <span id="skill-summary" class="summary-pill">0 个技能</span>
+              </div>
+              <div id="skills-output" class="card-list">
+                <p class="muted">正在加载技能目录。</p>
+              </div>
+            </section>
+
+            <section class="panel results-panel wide">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">Output</p>
+                  <h3>输出</h3>
+                </div>
+              </div>
+              <div class="output-grid">
+                <article class="output-card output-card-wide">
+                  <h4>ESG 工作流</h4>
+                  <div id="esg-workflow-output" class="esg-overview">
+                    <p class="muted">执行 ESG 报告流程后会在这里展示标准、披露矩阵、补资料清单和证据链接。</p>
+                  </div>
+                </article>
+                <article class="output-card">
+                  <h4>总结</h4>
+                  <pre id="summary-output" class="code-block muted">执行完成后会在这里输出总结。</pre>
+                </article>
+                <article class="output-card">
+                  <h4>证据出处</h4>
+                  <div id="evidence-output" class="evidence-list">
+                    <p class="muted">执行完成后会在这里展示引用的材料位置。</p>
+                  </div>
+                </article>
+                <article class="output-card">
+                  <h4>导出文件</h4>
+                  <div id="downloads-output" class="download-list">
+                    <p class="muted">执行完成后会在这里提供可下载文件。</p>
+                  </div>
+                </article>
+                <article class="output-card">
+                  <h4>修订文稿</h4>
+                  <pre id="revised-output" class="code-block muted">如果某个技能产出了修订文稿，会显示在这里。</pre>
+                </article>
+              </div>
+            </section>
+
+            <section class="panel results-panel wide">
+              <div class="panel-header">
+                <div>
+                  <p class="section-kicker">Artifacts</p>
+                  <h3>结果</h3>
+                </div>
+              </div>
+              <pre id="artifacts-output" class="code-block muted">执行完成后会在这里展示结构化产物。</pre>
+            </section>
+          </div>
+        </section>
+
+        <details class="advanced-panel">
+          <summary>原始任务与文档</summary>
+          <div class="advanced-panel-body">
+            <p class="helper-text advanced-intro">
+              这里保留原始 <code>task</code> 和 <code>documents</code> 输入，适合调试或直接粘贴 JSON。
+            </p>
+            <div class="advanced-grid">
+              <label class="field field-span-2">
+                <span class="field-label">任务上下文</span>
+                <textarea
+                  id="task"
+                  name="task"
+                  rows="5"
+                  placeholder="这里会根据对话自动整理任务描述，你也可以手工修正。"
+                  required
+                ></textarea>
+                <span class="helper-text field-note">一般不需要手工编辑；聊天输入会自动同步到这里。</span>
+              </label>
+
+              <label class="field field-span-2">
+                <span class="field-label">文档数据</span>
+                <textarea
+                  id="documents"
+                  name="documents"
+                  rows="12"
+                  spellcheck="false"
+                  placeholder='[{"name":"2025_esg_report_draft.docx","type":"word","contentText":"...","tags":["report"]}]'
+                ></textarea>
+                <span class="helper-text field-note">
+                  每个文档支持：<code>name</code>、<code>type</code>、<code>contentText</code>、<code>ocrText</code>、<code>tags</code>、<code>structuredData</code>。
+                </span>
+              </label>
+            </div>
+          </div>
+        </details>
+      </form>
+    </div>
+
+    <script type="module" src="/workflow-bundle"></script>
+  </body>
+</html>

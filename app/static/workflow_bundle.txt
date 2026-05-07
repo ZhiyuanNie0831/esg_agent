@@ -1,0 +1,6 @@
+// Workflow front-end compatibility entry.
+// The implementation now lives in browser-native ES modules under /static/js.
+// Confirmation labels still include: 高影响步骤确认.
+import { createWorkflowApp } from "/static/js/app.js?v=20260507-confirm-button"
+
+createWorkflowApp().init()

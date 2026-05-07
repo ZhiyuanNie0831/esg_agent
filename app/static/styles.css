@@ -1,0 +1,969 @@
+/* 工作流前端样式表。
+   负责定义页面布局、卡片样式、聊天区、结果区和下载区的视觉表现。 */
+:root {
+  --bg: #f3f6f4;
+  --panel: #ffffff;
+  --panel-soft: #f8faf9;
+  --border: #d8e0dc;
+  --border-strong: #aebdb6;
+  --text: #14211b;
+  --muted: #64736c;
+  --accent: #0f6b4f;
+  --accent-strong: #0b4d3a;
+  --accent-soft: #eaf4ef;
+  --blue: #285f9f;
+  --blue-soft: #edf4fb;
+  --danger: #b42318;
+  --danger-soft: #fff1f0;
+  --warning: #ad6800;
+  --warning-soft: #fff7e6;
+  --shadow: 0 10px 28px rgba(22, 45, 35, 0.08);
+  --radius: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.app-shell {
+  width: min(1280px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: 16px 0 24px;
+}
+
+.app-form,
+.chat-panel,
+.setup-shell,
+.setup-grid,
+.side-column,
+.side-stack,
+.results-shell,
+.results-grid,
+.output-grid,
+.card-list,
+.skill-pill-list,
+.skillset-editor,
+.skillset-section,
+.setup-options-grid,
+.toggle-card-copy,
+.skill-picker-grid,
+.advanced-grid,
+.field,
+.output-card {
+  display: grid;
+  gap: 12px;
+}
+
+.topbar,
+.setup-grid,
+.workspace-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.topbar {
+  grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr) auto;
+  align-items: start;
+}
+
+.workspace-grid {
+  grid-template-columns: minmax(0, 1.7fr) minmax(320px, 1fr);
+}
+
+.setup-grid {
+  grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.35fr);
+}
+
+.brand-card,
+.health-card,
+.panel,
+.advanced-panel,
+.embedded-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.brand-card {
+  border-color: #bdd7cd;
+  background: linear-gradient(180deg, #ffffff 0%, #f3faf6 100%);
+}
+
+.brand-card,
+.health-card,
+.panel,
+.embedded-panel {
+  padding: 16px;
+}
+
+.advanced-panel {
+  overflow: hidden;
+}
+
+.advanced-panel summary {
+  padding: 14px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+}
+
+.advanced-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.advanced-panel summary::after {
+  content: "展开";
+  float: right;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.advanced-panel[open] summary::after {
+  content: "收起";
+}
+
+.advanced-panel-body {
+  padding: 0 16px 16px;
+}
+
+.advanced-intro {
+  margin: 0 0 12px;
+}
+
+.advanced-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.field-span-2,
+.results-panel.wide {
+  grid-column: 1 / -1;
+}
+
+.panel-header,
+.card-heading,
+.attempt-head,
+.composer-top-actions,
+.composer-toolbar,
+.composer-actions,
+.actions,
+.skillset-add-row,
+.skill-picker-head,
+.inline-pills,
+.chat-message-actions,
+.skill-picker-meta,
+.log-chip-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.eyebrow,
+.section-kicker {
+  margin: 0 0 4px;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.field-label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  color: var(--text);
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 28px;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 15px;
+}
+
+.subtitle,
+.helper-text,
+.muted {
+  color: var(--muted);
+}
+
+.subtitle,
+.helper-text {
+  margin: 0;
+}
+
+.helper-text code {
+  padding: 1px 4px;
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.health-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.health-grid dt {
+  margin: 0 0 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.health-grid dd {
+  margin: 0;
+}
+
+.status-badge,
+.result-status,
+.summary-pill,
+.skill-meta-pill,
+.log-chip,
+.attempt-head span,
+.skill-pill-order {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-badge.pending,
+.result-status.idle {
+  background: var(--accent-soft);
+}
+
+.status-badge.ok,
+.result-status.generated,
+.result-status.executed,
+.result-status.completed {
+  background: #edf8f1;
+  border-color: #9bd2b8;
+  color: var(--accent-strong);
+}
+
+.status-badge.error,
+.result-status.error,
+.result-status.failed,
+.result-status.needs_documents,
+.result-status.blocked {
+  background: var(--danger-soft);
+  border-color: #ffccc7;
+  color: var(--danger);
+}
+
+.result-status.planned,
+.result-status.ready_to_execute,
+.result-status.awaiting_confirmation {
+  background: var(--warning-soft);
+  border-color: #ffd591;
+  color: var(--warning);
+}
+
+.primary-button,
+.secondary-button,
+.ghost-button,
+.skill-picker-button,
+.skill-pill-remove,
+.chat-inline-action {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.primary-button {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.ghost-button {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.skill-picker-button.active,
+.skill-picker-card.active {
+  border-color: var(--text);
+}
+
+.primary-button:hover,
+.secondary-button:hover,
+.ghost-button:hover,
+.skill-picker-button:hover,
+.skill-pill-remove:hover,
+.chat-inline-action:hover {
+  background: #eef5f1;
+}
+
+.primary-button:hover {
+  background: var(--accent-strong);
+}
+
+.primary-button:disabled,
+.secondary-button:disabled,
+.ghost-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+textarea,
+input[type="text"],
+input[type="number"],
+input[type="file"],
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--text);
+  outline: none;
+}
+
+textarea {
+  min-height: 110px;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 14px;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="file"]:focus,
+select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(15, 107, 79, 0.12);
+}
+
+.chat-thread {
+  min-height: 360px;
+  max-height: 60vh;
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fbfdfc;
+}
+
+.chat-message {
+  max-width: 100%;
+  margin-bottom: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fafafa;
+}
+
+.chat-message.user {
+  margin-left: auto;
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: #ffffff;
+}
+
+.chat-message.warning {
+  background: var(--warning-soft);
+}
+
+.chat-message.error {
+  background: var(--danger-soft);
+}
+
+.chat-message-meta {
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.chat-message.user .chat-message-meta,
+.chat-message.user .chat-message-body {
+  color: #ffffff;
+}
+
+.chat-message-body {
+  display: grid;
+  gap: 8px;
+}
+
+.chat-message-body p,
+.attempt-text,
+.log-detail-line,
+.skill-picker-copy p,
+.skill-pill-copy span {
+  margin: 0;
+}
+
+.chat-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.chat-message-actions {
+  margin-top: 8px;
+}
+
+.composer-panel {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #ffffff;
+}
+
+.composer-top-actions,
+.composer-toolbar,
+.composer-actions {
+  justify-content: flex-start;
+}
+
+.composer-top-actions {
+  justify-content: flex-end;
+}
+
+.setup-panel {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.setup-options-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.toggle-card,
+.option-card {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fafafa;
+}
+
+.toggle-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.toggle-card-copy {
+  gap: 4px;
+}
+
+.toggle-card strong,
+.option-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.toggle-card input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  flex: none;
+}
+
+.option-card select {
+  margin-top: 4px;
+}
+
+.composer-toolbar input[type="file"] {
+  flex: 1 1 240px;
+}
+
+.workflow-card,
+.skill-pill,
+.skill-picker-card,
+.side-block,
+.output-card,
+.evidence-card {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #ffffff;
+}
+
+.workflow-card {
+  border-left: 4px solid var(--accent);
+}
+
+.skill-picker-card.active {
+  background: #f3faf6;
+}
+
+.skill-pill {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.skill-pill.registered {
+  background: #fafafa;
+}
+
+.skill-pill.custom {
+  background: #fffaf3;
+}
+
+.skill-pill-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.skill-picker-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.results-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.output-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.output-card-wide {
+  grid-column: 1 / -1;
+}
+
+.toggle-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fafafa;
+}
+
+.toggle-field input {
+  width: 16px;
+  height: 16px;
+}
+
+.code-block,
+.table-empty {
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #f7f7f7;
+  color: var(--text);
+  overflow: auto;
+}
+
+.evidence-list {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  min-height: 120px;
+}
+
+.download-list {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  min-height: 120px;
+}
+
+.evidence-card {
+  display: grid;
+  gap: 6px;
+  background: #fafafa;
+}
+
+.download-card {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fafafa;
+}
+
+.evidence-title,
+.evidence-excerpt,
+.evidence-meta {
+  margin: 0;
+}
+
+.download-title,
+.download-meta {
+  margin: 0;
+}
+
+.evidence-meta {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.download-meta {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.confirmation-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.confirmation-review-grid,
+.confirmation-detail-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.confirmation-review-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.confirmation-review-card,
+.confirmation-note {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #ffffff;
+}
+
+.confirmation-review-card {
+  display: grid;
+  gap: 4px;
+}
+
+.confirmation-review-card span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.confirmation-review-card strong {
+  font-size: 16px;
+}
+
+.confirmation-note {
+  background: var(--warning-soft);
+  border-color: #ffd591;
+}
+
+.confirmation-note p,
+.confirmation-detail-grid p {
+  margin: 0;
+}
+
+.confirmation-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.confirmation-detail-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.confirmation-table-shell {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #ffffff;
+}
+
+.confirmation-table {
+  width: 100%;
+  min-width: 880px;
+  border-collapse: collapse;
+}
+
+.confirmation-table th,
+.confirmation-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+  font-size: 14px;
+}
+
+.confirmation-table thead th {
+  background: #f7f7f7;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.confirmation-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.mapping-input {
+  min-width: 140px;
+}
+
+.mapping-status,
+.mapping-message {
+  margin: 0;
+}
+
+.mapping-status {
+  font-weight: 600;
+}
+
+.esg-overview {
+  min-height: 120px;
+}
+
+.esg-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.esg-overview-block {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel-soft);
+}
+
+.esg-overview-block h5 {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.esg-chip-row,
+.esg-stat-row,
+.esg-card-stack {
+  display: grid;
+  gap: 8px;
+}
+
+.esg-chip {
+  display: grid;
+  gap: 2px;
+  padding: 9px 10px;
+  border: 1px solid #bdd7cd;
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--text);
+  font-size: 12px;
+}
+
+.esg-chip strong {
+  color: var(--accent-strong);
+}
+
+.esg-stat-row {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.esg-stat {
+  display: grid;
+  gap: 2px;
+  padding: 8px;
+  border: 1px solid #bdd7cd;
+  border-radius: 6px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.esg-stat span {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent-strong);
+}
+
+.esg-stat small {
+  color: var(--muted);
+}
+
+.esg-stat.warn span {
+  color: var(--warning);
+}
+
+.esg-stat.danger span {
+  color: var(--danger);
+}
+
+.esg-matrix-mini {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.esg-matrix-mini td {
+  padding: 7px 0;
+  border-top: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.esg-matrix-mini td + td {
+  padding-left: 8px;
+}
+
+.esg-status {
+  display: inline-flex;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.esg-status.weak {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.esg-status.missing {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.esg-mini-card {
+  display: grid;
+  gap: 3px;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.esg-mini-card strong,
+.esg-mini-card span {
+  overflow-wrap: anywhere;
+}
+
+.esg-mini-card span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.mapping-message {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.small-code {
+  min-height: 80px;
+}
+
+.message-box {
+  padding: 10px 12px;
+  border-radius: var(--radius);
+}
+
+.message-box.error {
+  background: var(--danger-soft);
+  border: 1px solid #ffccc7;
+  color: var(--danger);
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 1100px) {
+  .topbar,
+  .setup-grid,
+  .workspace-grid,
+  .results-grid,
+  .output-grid,
+  .esg-overview-grid,
+  .confirmation-review-grid,
+  .confirmation-detail-grid,
+  .advanced-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .setup-options-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field-span-2,
+  .results-panel.wide {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .app-shell {
+    width: min(100vw - 20px, 100%);
+    padding-top: 10px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .skill-pill {
+    grid-template-columns: 1fr;
+  }
+
+  .toggle-card {
+    flex-direction: column;
+  }
+}
